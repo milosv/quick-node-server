@@ -1,10 +1,9 @@
-let http = require('http'),
-    fs = require('fs'),
-    path = require('path'),
-    host = '127.0.0.1',
-    port = '9000';
-
-let mimes = {
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const host = '127.0.0.1';
+const port = '9000';
+const mimes = {
   ".html" : "text/html",
   ".htm" : "text/html",
   ".css" : "text/css",
@@ -15,13 +14,16 @@ let mimes = {
   ".png" : "image/png"
 }
 
-let server = http.createServer((req, res) => {
-  let filePath = (req.url === '/') ? ('./web/index.html') : ('./web' + req.url);
-  let contentType = mimes[path.extname(filePath)];
+const server = http.createServer((req, res) => {
+  
+  const filePath = (req.url === '/') ? ('./web/index.html') : ('./web' + req.url);
+  const contentType = mimes[path.extname(filePath)];
+
   fs.exists(filePath, (file_exists) => {
+
     if(file_exists){
         res.writeHead(200, {'Content-Type': contentType});
-        let streamFile = fs.createReadStream(filePath).pipe(res);
+        const streamFile = fs.createReadStream(filePath).pipe(res);
 
         streamFile.on('error', () => {
           res.writeHead(404);
@@ -29,10 +31,12 @@ let server = http.createServer((req, res) => {
         });
 
     }else{
+
       res.writeHead(404);
       res.end('sorry we could not find the file you requested');
     }
   });
 }).listen(port, host, () => {
+
   console.log('Server running on http://' + host + ':' + port);
 });
